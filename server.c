@@ -172,6 +172,24 @@ removePubSubApplicationCallback(UA_Server *server, UA_NodeId identifier, UA_UInt
                        "Pthread Join Failed thread: %ld\n", callbackId);
 }
 
+static UA_StatusCode
+externalDataWriteCallback(UA_Server *server, const UA_NodeId *sessionId,
+                          void *sessionContext, const UA_NodeId *nodeId,
+                          void *nodeContext, const UA_NumericRange *range,
+                          const UA_DataValue *data){
+    //node values are updated by using variables in the memory
+    //UA_Server_write is not used for updating node values.
+    return UA_STATUSCODE_GOOD;
+}
+
+static UA_StatusCode
+externalDataReadNotificationCallback(UA_Server *server, const UA_NodeId *sessionId,
+                                     void *sessionContext, const UA_NodeId *nodeid,
+                                     void *nodeContext, const UA_NumericRange *range){
+    //allow read without any preparation
+    return UA_STATUSCODE_GOOD;
+}
+
 static void
 addPubSubConnection(UA_Server *server, UA_NetworkAddressUrlDataType *networkAddressUrlPub){
     /* Details about the connection configuration and handling are located
