@@ -10,7 +10,7 @@
 #include <open62541/plugin/pubsub_ethernet.h>
 
 #include "ua_pubsub.h"
-#include "open62541/namespace_example_publisher_generated.h"
+#include "namespace0_generated.h"
 
 /* to find load of each thread
  * ps -L -o pid,pri,%cpu -C pubsub_nodeset_rt_publisher */
@@ -126,10 +126,12 @@ static void stopHandler(int sign) {
     running = UA_FALSE;
 }
 
-while (timeSpecValue->tv_nsec > (SECONDS -1)) {
-    /* Move to next second and remove it from ns field */
-    timeSpecValue->tv_sec  += SECONDS_INCREMENT;
-    timeSpecValue->tv_nsec -= SECONDS;
+static void nanoSecondFieldConversion(struct timespec *timeSpecValue) {
+    while (timeSpecValue->tv_nsec > (SECONDS - 1)) {
+        /* Move to next second and remove it from ns field */
+        timeSpecValue->tv_sec += SECONDS_INCREMENT;
+        timeSpecValue->tv_nsec -= SECONDS;
+    }
 }
 
 /* Add a callback for cyclic repetition */
@@ -482,7 +484,7 @@ int main(int argc, char **argv) {
     /* Files namespace_example_publisher_generated.h and namespace_example_publisher_generated.c are created from
      * pubDataModel.xml in the /src_generated directory by CMake */
     /* Loading the user created variables into the information model from the generated .c and .h files */
-    if(namespace_example_publisher_generated(server) != UA_STATUSCODE_GOOD) {
+    if(namespace0_generated(server) != UA_STATUSCODE_GOOD) {
         UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "Could not add the example nodeset. "
                                                            "Check previous output for any error.");
     }
