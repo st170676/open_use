@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModelDesign
+        xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ua="http://opcfoundation.org/UA/"
+        xmlns:aPWM="https://manuelweissisw.org/UA/adaptivePWM/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        TargetNamespace="https://manuelweissisw.org/UA/adaptivePWM/"
+        TargetXmlNamespace="https://manuelweissisw.org/UA/adaptivePWM/"
+        TargetVersion="0.1.0"
+        TargetPublicationDate="2022-09-26T00:00:00Z"
+        xmlns="http://opcfoundation.org/UA/ModelDesign.xsd">
+    <Namespaces>
+        <Namespace Name="adaptivePWM" Prefix="adaptive.PWM" XmlNamespace="https://manuelweissisw.org/UA/adaptivePWM/Types.xsd" XmlPrefix="adaptivePWM">https://manuelweissisw.org/UA/adaptivePWM/</Namespace>
+        <Namespace Name="OpcUa" Version="1.03" PublicationDate="2013-12-02T00:00:00Z" Prefix="Opc.Ua" InternalPrefix="Opc.Ua.Server" XmlNamespace="http://opcfoundation.org/UA/2008/02/Types.xsd" XmlPrefix="OpcUa">http://opcfoundation.org/UA/</Namespace>
+    </Namespaces>
+    <!-- ### Reference Types ###-->
+    <!-- ### Object Types ###-->
+    <ObjectType SymbolicName="aPWM:AxisType" BaseType="ua:BaseObjectType" IsAbstract="true">
+        <Description>Base Type of tooling machine axis</Description>
+        <Children>
+            <Property SymbolicName="aPWM:Name" DataType="ua:String" ValueRank="Scalar" ModellingRule="Mandatory">
+                <Description>Name of the axis</Description>
+            </Property>
+        </Children>
+    </ObjectType>
+    <!-- ### Variable Types ###-->
+    <!-- ### Data Types ###-->
+    <!-- ### Objects ###-->
+    <Object SymbolicName="aPWM:XAxis" TypeDefinition="aPWM:AxisType">
+        <Children>
+            <Property SymbolicName="aPWM:PosSet" DataType="ua:Int32" ValueRank="Scalar" />
+        </Children>
+    </Object>
+    <Object SymbolicName="aPWM:YAxis" TypeDefinition="aPWM:AxisType">
+        <Children>
+            <Property SymbolicName="aPWM:PosSet" DataType="ua:Int32" ValueRank="Scalar" />
+        </Children>
+    </Object>
+    <Object SymbolicName="aPWM:ZAxis" TypeDefinition="aPWM:AxisType">
+        <Children>
+            <Property SymbolicName="aPWM:PosSet" DataType="ua:Int32" ValueRank="Scalar" />
+        </Children>
+    </Object>
+</ModelDesign>
