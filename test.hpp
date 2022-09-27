@@ -35,7 +35,7 @@
 #include <open62541/plugin/pubsub_ethernet.h>
 
 #include "../deps/open62541/src/pubsub/ua_pubsub.h"
-#include "isgcncDataModel"
+#include "isgcncDataModel.h"
 
 #define             DEFAULT_CYCLE_TIME                    0.25
 /* Qbv offset */
@@ -58,18 +58,6 @@
 #define             CLOCKID                               CLOCK_TAI
 #define             ETH_TRANSPORT_PROFILE                 "http://opcfoundation.org/UA-Profile/Transport/pubsub-eth-uadp"
 #define             DEFAULT_USERAPPLICATION_SCHED_PRIORITY 75
-
-
-static void nanoSecondFieldConversion(struct timespec *timeSpecValue) {
-    /* Check if ns field is greater than '1 ns less than 1sec' */
-    while (timeSpecValue->tv_nsec > (SECONDS -1)) {
-        /* Move to next second and remove it from ns field */
-        timeSpecValue->tv_sec  += SECONDS_INCREMENT;
-        timeSpecValue->tv_nsec -= SECONDS;
-    }
-
-}
-
 
 
 static RawMessage init_message()
@@ -173,7 +161,31 @@ namespace Connector
 	
 	
 		openConnector() {
-			static UA_Double  cycleTimeMsec   = DEFAULT_CYCLE_TIME;
+			void *publisherETF(void *arg);
+			void *userApplicationPub(void *arg);
+			static pthread_t threadCreation(UA_Int32 threadPriority, UA_Int32 coreAffinity, void *(*thread) (void *),
+											char *applicationName, void *serverConfig);
+
+			
+		}
+		
+		static void stopHandler(int sign) {
+			UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "received ctrl-c");
+			running = UA_FALSE;
+		}
+		
+		static void nanoSecondFieldConversion(struct timespec *timeSpecValue) {
+			/* Check if ns field is greater than '1 ns less than 1sec' */
+			while (timeSpecValue->tv_nsec > (SECONDS -1)) {
+				/* Move to next second and remove it from ns field */
+				timeSpecValue->tv_sec  += SECONDS_INCREMENT;
+				timeSpecValue->tv_nsec -= SECONDS;
+			}
+
+		}
+		
+	private:
+		static UA_Double  cycleTimeMsec   = DEFAULT_CYCLE_TIME;
 			static UA_Boolean consolePrint    = UA_FALSE;
 			static UA_Int32   socketPriority  = DEFAULT_SOCKET_PRIORITY;
 			static UA_Int32   pubPriority     = DEFAULT_PUB_SCHED_PRIORITY;
@@ -219,17 +231,6 @@ namespace Connector
 			UA_Duration                  interval_ms;
 			UA_UInt64*                   callbackId;
 			} threadArg;
-
-			void *publisherETF(void *arg);
-			void *userApplicationPub(void *arg);
-			static pthread_t threadCreation(UA_Int32 threadPriority, UA_Int32 coreAffinity, void *(*thread) (void *),
-											char *applicationName, void *serverConfig);
-
-			static void stopHandler(int sign) {
-				UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "received ctrl-c");
-				running = UA_FALSE;
-			}
-		}
 	};
 	
 	class Connector
